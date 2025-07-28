@@ -88,12 +88,6 @@ If your callback code is long‑lasting or too heavy, the OpenCR may fail to enu
 3. Upload an empty sketch.  
 4. If it still won’t come back online, remove the `usbSerialRxInterrupt(...)` line you added to `USBD_CDC_DataOut` (it indicates something in your handler is blocking too long).
 
-### Adding a Button‑Diagram Image
-
-1. Photograph or screenshot your OpenCR showing SW1/RESET/SW2.  
-2. Add the image file (e.g. `buttons.png`) into your repo, e.g. under `docs/` or `images/`.  
-3. Embed it in **README.md** like this:
-
 ![OpenCR Button Layout](https://emanual.robotis.com/assets/images/parts/controller/opencr10/arduino_pinmap_08.png)
 
 *Image source: [emanual.robotis.com](https://emanual.robotis.com/assets/images/parts/controller/opencr10/arduino_pinmap_08.png)*
