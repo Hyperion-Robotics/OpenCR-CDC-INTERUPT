@@ -22,31 +22,29 @@ By default, `SerialUSB` on the OpenCR isn’t tied to a hardware UART, so you ca
    __attribute__((weak)) void usbSerialRxInterrupt(uint8_t *data, uint32_t length) {}
 3. In USBD_CDC_DataOut, after the Receive(...) call and before return USBD_OK;, insert:
 
-```c
-usbSerialRxInterrupt(hcdc->RxBuffer, hcdc->RxLength);
-```
-The modified section will look like this:
-```c
-if (pdev->pClassData != NULL) {
-    ((USBD_CDC_ItfTypeDef *)pdev->pUserData)->Receive(hcdc->RxBuffer, &hcdc->RxLength);
-    // Invoke the weak callback
+   ```c
     usbSerialRxInterrupt(hcdc->RxBuffer, hcdc->RxLength);
-    return USBD_OK;
-} else {
-    return USBD_FAIL;
-}
-```
+The modified section will look like this:
+   ```c
+   if (pdev->pClassData != NULL) {
+       ((USBD_CDC_ItfTypeDef *)pdev->pUserData)->Receive(hcdc->RxBuffer, &hcdc->RxLength);
+       // Invoke the weak callback
+       usbSerialRxInterrupt(hcdc->RxBuffer, hcdc->RxLength);
+       return USBD_OK;
+   } else {
+       return USBD_FAIL;
+   }
 
 4. Save the file and restart your Arduino IDE so the change takes effect.
 
 ## Usage in Your Sketch
 In your .ino file, implement the weak callback:
 
-```cpp
-extern "C" void usbSerialRxInterrupt(uint8_t *data, uint32_t length) {
-    // Your interrupt-like handler, e.g., buffer data or toggle a flag.
-}
-```
+   ```cpp
+   extern "C" void usbSerialRxInterrupt(uint8_t *data, uint32_t length) {
+       // Your interrupt-like handler, e.g., buffer data or toggle a flag.
+   }
+
 This function will be called for each incoming USB packet, allowing you to process data immediately.
 
 Notes
