@@ -34,7 +34,39 @@ The modified section will look like this:
    } else {
        return USBD_FAIL;
    }
-
+```
+And that part of code:
+   ```c
+   __attribute__((weak)) void usbSerialRxInterrupt(uint8_t *data, uint32_t length) {}
+   
+   /**
+     * @brief  USBD_CDC_DataOut
+     *         Data received on non-control Out endpoint
+     * @param  pdev: device instance
+     * @param  epnum: endpoint number
+     * @retval status
+     */
+   static uint8_t  USBD_CDC_DataOut (USBD_HandleTypeDef *pdev, uint8_t epnum)
+   {
+     USBD_CDC_HandleTypeDef   *hcdc = (USBD_CDC_HandleTypeDef*) pdev->pClassData;
+   
+     /* Get the received data length */
+     hcdc->RxLength = USBD_LL_GetRxDataSize (pdev, epnum);
+   
+     /* USB data will be immediately processed, this allow next USB traffic being
+     NAKed till the end of the application Xfer */
+     if(pdev->pClassData != NULL)
+     {
+       ((USBD_CDC_ItfTypeDef *)pdev->pUserData)->Receive(hcdc->RxBuffer, &hcdc->RxLength);
+       usbSerialRxInterrupt(hcdc->RxBuffer, hcdc->RxLength);
+       return USBD_OK;
+     }
+     else
+     {
+       return USBD_FAIL;
+     }
+   }
+```
 4. Save the file and restart your Arduino IDE so the change takes effect.
 
 ## Usage in Your Sketch
@@ -44,6 +76,7 @@ In your .ino file, implement the weak callback:
    extern "C" void usbSerialRxInterrupt(uint8_t *data, uint32_t length) {
        // Your interrupt-like handler, e.g., buffer data or toggle a flag.
    }
+```
 
 This function will be called for each incoming USB packet, allowing you to process data immediately.
 
