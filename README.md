@@ -7,7 +7,7 @@ By default, SerialUSB on the OpenCR isnâ€™t tied to a hardware UART, so you canâ
 ## Installation
 1. Locate usbd_cdc.c in your local Arduino package folder.
 For example on Windows:
-`C:\Users<YourUser>\AppData\Local\Arduino15\packages\OpenCR\hardware\OpenCR\1.5.3\variants\OpenCR\hw\usb_cdc\usbd_cdc.c`
+`C:\Users\<YourUser>\AppData\Local\Arduino15\packages\OpenCR\hardware\OpenCR\1.5.3\variants\OpenCR\hw\usb_cdc\usbd_cdc.c`
 
 2. Open usbd_cdc.c and add the following before the USBD_CDC_DataOut function:
    ```c
